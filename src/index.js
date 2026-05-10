@@ -133,9 +133,8 @@ class PowerBICustomVisualsWebpackPlugin {
 	}
 
 	async generateStatusAsset(compilation) {
-		const status = `${new Date().getTime()}\n${this.options.visual.guid}${
-			this.options.devMode ? DEBUG : ""
-		}`;
+		const status = `${new Date().getTime()}\n${this.options.visual.guid}${this.options.devMode ? DEBUG : ""
+			}`;
 
 		compilation.emitAsset("status", new RawSource(status));
 	}
@@ -172,9 +171,8 @@ class PowerBICustomVisualsWebpackPlugin {
 
 		if (!config.dependencies) delete config.dependencies; //delete parameter with null value
 
-		config.visual.guid = `${this.options.visual.guid}${
-			options.devMode ? DEBUG : ""
-		}`;
+		config.visual.guid = `${this.options.visual.guid}${options.devMode ? DEBUG : ""
+			}`;
 
 		if (!this.options.devMode) {
 			await this.generateResources(config);
@@ -197,10 +195,10 @@ class PowerBICustomVisualsWebpackPlugin {
 			if (extension === "js") {
 				assetsContent.jsContent = shouldCheckNetworkCalls
 					? this.handleNetworkCalls(
-							content,
-							this.options.certificationFix,
-							this.options.certificationAudit,
-						)
+						content,
+						this.options.certificationFix,
+						this.options.certificationAudit,
+					)
 					: content;
 			} else if (extension === "css") {
 				assetsContent.cssContent = content;
@@ -317,9 +315,8 @@ class PowerBICustomVisualsWebpackPlugin {
 
 	getPluginOptions() {
 		return {
-			pluginName: `${this.options.visual.guid}${
-				this.options.devMode ? DEBUG : ""
-			}`,
+			pluginName: `${this.options.visual.guid}${this.options.devMode ? DEBUG : ""
+				}`,
 			visualGuid: this.options.visual.guid,
 			visualClass: this.options.visual.visualClassName,
 			visualDisplayName: this.options.visual.displayName,
@@ -427,7 +424,9 @@ class PowerBICustomVisualsWebpackPlugin {
 				this.outputFile(
 					path.join(resourcePath, "visual.js"),
 					config.content.js,
-				),
+				)
+			);
+			operations.push(
 				this.outputFile(
 					path.join(
 						resourcePath,
@@ -435,15 +434,23 @@ class PowerBICustomVisualsWebpackPlugin {
 					),
 					JSON.stringify(prodConfig),
 				),
-				this.outputFile(
-					path.join(resourcePath, "visual.prod.js"),
-					config.content.js,
-				),
-				this.outputFile(
-					path.join(resourcePath, "visual.prod.css"),
-					config.content.css,
-				),
 			);
+			if (config.content.js) {
+				operations.push(
+					this.outputFile(
+						path.join(resourcePath, "visual.prod.js"),
+						config.content.js,
+					),
+				);
+			}
+			if (config.content.css) {
+				operations.push(
+					this.outputFile(
+						path.join(resourcePath, "visual.prod.css"),
+						config.content.css,
+					),
+				);
+			}
 		}
 
 		if (this.options.generatePbiviz) {
@@ -478,8 +485,7 @@ class PowerBICustomVisualsWebpackPlugin {
 			});
 
 			logger.info(
-				`Package compression ${
-					isCompressionEnabled ? "enabled" : "disabled"
+				`Package compression ${isCompressionEnabled ? "enabled" : "disabled"
 				}`,
 			);
 
